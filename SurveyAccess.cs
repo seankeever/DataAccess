@@ -18,6 +18,9 @@ namespace DataAccess
             _connectionstring = System.Configuration.ConfigurationManager.ConnectionStrings[_connectionstringName].ToString();
         }
 
+		//-----------------------------------------
+		//-------- Question Table Methods ----------
+		//-----------------------------------------
 		public bool InsertQuestion(string Description, bool AllowYesNo, bool AllowShortAnswer)
 		{
 			Common.ConnectionManagement myconnector = new Common.ConnectionManagement(_connectionstring);
@@ -31,7 +34,50 @@ namespace DataAccess
 				return false;
 			else
 				return true;
+		}
 
+		public bool DeleteQuestion(short QuestionID)
+		{
+			Common.ConnectionManagement myconnector = new Common.ConnectionManagement(_connectionstring);
+			List<SqlParameter> procParams = new List<SqlParameter>();
+			procParams.Add(new SqlParameter("QuestionID", QuestionID));
+			Common.SQLQueryResult queryRes = myconnector.ExecuteNonQueryProcedure("srvy.DeleteQuestion", procParams, 600);
+			_lastSqlException = queryRes.SqlError;
+			if (queryRes.SqlError != null)
+				return false;
+			else
+				return true;
+		}
+
+		//-----------------------------------------
+		//-------- Answer Table Methods ----------
+		//-----------------------------------------
+		public bool InsertAnswer(short QuestionID, bool? YesNo, string Description)
+		{
+			Common.ConnectionManagement myconnector = new Common.ConnectionManagement(_connectionstring);
+			List<SqlParameter> procParams = new List<SqlParameter>();
+			procParams.Add(new SqlParameter("@QuestionID", QuestionID));
+			procParams.Add(new SqlParameter("@YesNo", YesNo));
+			procParams.Add(new SqlParameter("@Description", Description));
+			Common.SQLQueryResult queryRes = myconnector.ExecuteNonQueryProcedure("srvy.InsertAnswer", procParams, 600);
+			_lastSqlException = queryRes.SqlError;
+			if (queryRes.SqlError != null)
+				return false;
+			else
+				return true;
+		}
+
+		public bool DeleteAnswer(short AnswerID)
+		{
+			Common.ConnectionManagement myconnector = new Common.ConnectionManagement(_connectionstring);
+			List<SqlParameter> procParams = new List<SqlParameter>();
+			procParams.Add(new SqlParameter("@AnswerID", AnswerID));
+			Common.SQLQueryResult queryRes = myconnector.ExecuteNonQueryProcedure("srvy.DeleteAnswer", procParams, 600);
+			_lastSqlException = queryRes.SqlError;
+			if (queryRes.SqlError != null)
+				return false;
+			else
+				return true;
 		}
 	}
 }
