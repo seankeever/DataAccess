@@ -21,6 +21,21 @@ namespace DataAccess
 		//-----------------------------------------
 		//-------- Question Table Methods ----------
 		//-----------------------------------------
+		public bool UpdateQuestion(short QuestionID,string Description, bool AllowYesNo, bool AllowShortAnswer)
+		{
+			Common.ConnectionManagement myconnector = new Common.ConnectionManagement(_connectionstring);
+			List<SqlParameter> procParams = new List<SqlParameter>();
+			procParams.Add(new SqlParameter("@QuestionID", QuestionID));
+			procParams.Add(new SqlParameter("@Description", Description));
+			procParams.Add(new SqlParameter("@AllowYesNo", AllowYesNo));
+			procParams.Add(new SqlParameter("@AllowShortAnswer", AllowShortAnswer));
+			Common.SQLQueryResult queryRes = myconnector.ExecuteNonQueryProcedure("srvy.UpdateQuestion", procParams, 600);
+			_lastSqlException = queryRes.SqlError;
+			if (queryRes.SqlError != null)
+				return false;
+			else
+				return true;
+		}
 		public bool InsertQuestion(string Description, bool AllowYesNo, bool AllowShortAnswer)
 		{
 			Common.ConnectionManagement myconnector = new Common.ConnectionManagement(_connectionstring);
